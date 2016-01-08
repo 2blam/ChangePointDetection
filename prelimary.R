@@ -75,30 +75,175 @@ data_chg_dep = data.frame(time=t, val=x_chg_dep)
 #multiplot
 p1 = ggplot(data_chg_mean, aes(x=time, y=val)) + 
   labs(x="Time", y="Value") +
-  geom_line(color="blue") + 
+  geom_line(color="black") + 
   geom_vline(xintercept=250, color="red", linetype="longdash") + 
   ggtitle("Change in mean")
 
 p2 = ggplot(data_chg_var, aes(x=time, y=val)) + 
   labs(x="Time", y="Value") +
-  geom_line(color="blue") + 
+  geom_line(color="black") + 
   geom_vline(xintercept=c(150, 350), color="red", linetype="longdash") + 
   ggtitle("Change in variance")
 
 p3 = ggplot(data_chg_reg, aes(x=time, y=val)) + 
   labs(x="Time", y="Value") +
-  geom_line(color="blue") + 
+  geom_line(color="black") + 
   geom_vline(xintercept=c(150, 350), color="red", linetype="longdash") + 
   ggtitle("Change in regression")
 
 p4 = ggplot(data_chg_dep, aes(x=time, y=val)) + 
   labs(x="Time", y="Value") +
-  geom_line(color="blue") + 
+  geom_line(color="black") + 
   geom_vline(xintercept=250, color="red", linetype="longdash") + 
   ggtitle("Change in dependence")
 
 multiplot(p1, p2, p3, p4, cols=2)
 
+######################################################################################
+# 4 detection algoritm in handling change in mean, regression, variance and dependance
+#change in mean 
+resultsMW_chg_mean = processStream(x_chg_mean, cpmType="Mann-Whitney", ARL0=500)
+resultsM_chg_mean = processStream(x_chg_mean, cpmType="Mood", ARL0=500)
+resultsL_chg_mean = processStream(x_chg_mean, cpmType="Lepage", ARL0=500)
+resultsKS_chg_mean = processStream(x_chg_mean, cpmType="Kolmogorov-Smirnov", ARL0=500)
+
+p1 = ggplot(data_chg_mean, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsMW_chg_mean$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsMW_chg_mean$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Mann-Whitney (Location shift)")
+
+p2 = ggplot(data_chg_mean, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsM_chg_mean$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsM_chg_mean$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Mood (Scale shift)")
+
+p3 = ggplot(data_chg_mean, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsL_chg_mean$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsL_chg_mean$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Lepage (Location & Scale shifts)")
+
+p4 = ggplot(data_chg_mean, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsKS_chg_mean$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsKS_chg_mean$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Kolmogorov-Smirnov (General changes)")
+
+multiplot(p1, p2, p3, p4, cols=2)
+
+#change in variance 
+resultsMW_chg_var = processStream(x_chg_var, cpmType="Mann-Whitney", ARL0=500)
+resultsM_chg_var = processStream(x_chg_var, cpmType="Mood", ARL0=500)
+resultsL_chg_var = processStream(x_chg_var, cpmType="Lepage", ARL0=500)
+resultsKS_chg_var = processStream(x_chg_var, cpmType="Kolmogorov-Smirnov", ARL0=500)
+
+p1 = ggplot(data_chg_var, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsMW_chg_var$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsMW_chg_var$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Mann-Whitney (Location shift)")
+
+p2 = ggplot(data_chg_var, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsM_chg_var$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsM_chg_var$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Mood (Scale shift)")
+
+p3 = ggplot(data_chg_var, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsL_chg_var$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsL_chg_var$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Lepage (Location & Scale shifts)")
+
+p4 = ggplot(data_chg_var, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsKS_chg_var$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsKS_chg_var$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Kolmogorov-Smirnov (General changes)")
+
+multiplot(p1, p2, p3, p4, cols=2)
+
+#change in regression 
+resultsMW_chg_reg = processStream(x_chg_reg, cpmType="Mann-Whitney", ARL0=500)
+resultsM_chg_reg = processStream(x_chg_reg, cpmType="Mood", ARL0=500)
+resultsL_chg_reg = processStream(x_chg_reg, cpmType="Lepage", ARL0=500)
+resultsKS_chg_reg = processStream(x_chg_reg, cpmType="Kolmogorov-Smirnov", ARL0=500)
+
+p1 = ggplot(data_chg_reg, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsMW_chg_reg$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsMW_chg_reg$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Mann-Whitney (Location shift)")
+
+p2 = ggplot(data_chg_reg, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsM_chg_reg$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsM_chg_reg$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Mood (Scale shift)")
+
+p3 = ggplot(data_chg_reg, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsL_chg_reg$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsL_chg_reg$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Lepage (Location & Scale shifts)")
+
+p4 = ggplot(data_chg_reg, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsKS_chg_reg$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsKS_chg_reg$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Kolmogorov-Smirnov (General changes)")
+
+multiplot(p1, p2, p3, p4, cols=2)
+
+#change in dependence 
+resultsMW_chg_dep= processStream(x_chg_reg, cpmType="Mann-Whitney", ARL0=500)
+resultsM_chg_dep = processStream(x_chg_reg, cpmType="Mood", ARL0=500)
+resultsL_chg_dep = processStream(x_chg_reg, cpmType="Lepage", ARL0=500)
+resultsKS_chg_dep = processStream(x_chg_reg, cpmType="Kolmogorov-Smirnov", ARL0=500)
+
+p1 = ggplot(data_chg_dep, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsMW_chg_dep$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsMW_chg_dep$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Mann-Whitney (Location shift)")
+
+p2 = ggplot(data_chg_dep, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsM_chg_dep$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsM_chg_dep$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Mood (Scale shift)")
+
+p3 = ggplot(data_chg_dep, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsL_chg_dep$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsL_chg_dep$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Lepage (Location & Scale shifts)")
+
+p4 = ggplot(data_chg_dep, aes(x=time, y=val)) + 
+  labs(x="Time", y="Value") +
+  geom_line(color="black") + 
+  geom_vline(xintercept=resultsKS_chg_dep$changePoint, color="red", linetype="longdash", size=2) + 
+  geom_vline(xintercept=resultsKS_chg_dep$detectionTimes, color="blue", linetype="longdash") + 
+  ggtitle("Kolmogorov-Smirnov (General changes)")
+
+multiplot(p1, p2, p3, p4, cols=2)
 
 #################################################################
 # get the sample data
@@ -120,7 +265,8 @@ t = seq(start, finish, 300);#tick - 5 minutes
 data_BU = data.frame(time=t, val=RTT$BU)
 
 
-startup_list = c(20, 40, 60, 80)
+#startup_list = c(20, 40, 60, 80)
+startup_list = c(80)
 ARL_list = c(100, 500, 1000, 5000)
 algo_list = c("Mann-Whitney", "Mood", "Lepage", "Kolmogorov-Smirnov")
 algo_abbr_list = c("MW", "M", "L", "KS")
